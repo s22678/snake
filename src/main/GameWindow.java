@@ -6,6 +6,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
@@ -27,7 +28,7 @@ public class GameWindow extends Application {
     public static final int HEIGHT = 45 * SEGMENT_SIZE;
 
     public static GameState state = GameState.STOPPED;
-    public static Direction dir = Direction.RIGHT;
+    public static Direction dir = Direction.DOWN;
 
     public static boolean moved = false;
     public static int score;
@@ -121,6 +122,7 @@ public class GameWindow extends Application {
 
     // Key Events
     public void keyControlledMovement(KeyEvent evt) {
+        // GameLoop.changeDirection(Direction)
         if(moved) {
             switch (evt.getCode()) {
                 case UP:
@@ -183,7 +185,7 @@ public class GameWindow extends Application {
                 writer.print(": " + dir.toString());
                 writer.close();
             } catch (IOException ex) {
-                System.out.println("ERROR SAVING THE FILE!");
+                alertMethod("GAME ERROR TRY AGAIN");
             }
         }
     }
@@ -197,16 +199,28 @@ public class GameWindow extends Application {
                 BufferedReader input = new BufferedReader(new FileReader(file));
                 String line = input.readLine();
                 String[] data = line.split(": ");
-                gameLoop.startFromSave(data[0], data[1], data[2]);
-                score = Integer.parseInt(data[3]);
-                dir.setDirection(data[4]);
-                resumeGame();
+                if(data.length < 5) {
+                    alertMethod("Game save file damaged");
+                } else {
+                    gameLoop.startFromSave(data[0], data[1], data[2]);
+                    score = Integer.parseInt(data[3]);
+                    dir.setDirection(data[4]);
+                    resumeGame();
+                }
             } catch (FileNotFoundException ex) {
-                System.out.println("FILE NOT FOUND");
+                alertMethod("File not found");
             } catch (IOException ex) {
-                System.out.println("IO EXCEPTION");
+                alertMethod("GAME ERROR TRY AGAIN");
             }
         }
+    }
+
+    private void alertMethod(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("IO EXCEPTION");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
     public void quitGameAction(ActionEvent avt) {

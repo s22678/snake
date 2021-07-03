@@ -73,7 +73,7 @@ class GameLoop extends AnimationTimer {
             }
 
             // collision detection with the wall
-            if(tail.getTranslateX() < 0 || tail.getTranslateX() >= GameWindow.WIDTH || tail.getTranslateY() < 0 || tail.getTranslateY() >= GameWindow.WIDTH) {
+            if(tail.getTranslateX() < 0 || tail.getTranslateX() >= (GameWindow.WIDTH) || tail.getTranslateY() < 0 || tail.getTranslateY() >= (GameWindow.WIDTH)) {
                 stopGame();
             }
 
@@ -135,7 +135,7 @@ class GameLoop extends AnimationTimer {
     public void startNewGame() {
         head = new Rectangle(GameWindow.SEGMENT_SIZE, GameWindow.SEGMENT_SIZE);
         snake.add(head);
-        GameWindow.dir = Direction.RIGHT;
+        GameWindow.dir = Direction.DOWN;
         speed = 7;
     }
 
